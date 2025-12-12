@@ -44,6 +44,7 @@ const adminController = require("./controllers/adminController");
 const storageController = require("./controllers/storageController");
 const customerController = require("./controllers/customerController");
 const cartController = require("./controllers/cartController");
+const invoiceController = require("./controllers/invoiceController");
 
 // -------------------------------------------------------------------
 // Routes (All GET and POST requests are defined here)
@@ -89,6 +90,12 @@ app.get("/cart", cartController.viewCart);
 app.post("/cart/add", cartController.add);
 app.post("/cart/update", cartController.update);
 app.post("/cart/remove", cartController.remove);
+
+// CHECKOUT + INVOICE ROUTES (UI unchanged)
+app.post("/checkout", invoiceController.checkout);
+app.get("/payment", invoiceController.paymentForm);
+app.post("/payment", invoiceController.processPayment);
+app.get("/history", invoiceController.history);
 
 // ADMIN DASHBOARD (The main storage list view)
 app.get("/admin/dashboard", (req, res) => {
