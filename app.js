@@ -97,127 +97,59 @@ app.get("/payment", invoiceController.paymentForm);
 app.post("/payment", invoiceController.processPayment);
 app.get("/history", invoiceController.history);
 
-// ADMIN DASHBOARD (The main admin panel with overview)
+// ADMIN DASHBOARD (The main storage list view)
 app.get("/admin/dashboard", (req, res) => {
     if (!req.session.user) return res.redirect("/login");
     if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    
-    admin.dashboard(req, res);
+
+    // Calls the controller function to fetch and display the storage list
+    admin.showStorageList(req, res);
+});
+// ADMIN USER MANAGEMENT ROUTES
+
+// LIST USERS (The main view for user management)
+app.get("/admin/users", (req, res) => {
+    // Basic admin middleware check
+    if (!req.session.user || req.session.user.role !== "admin") {
+        return res.status(403).send("Not authorized");
+    }
+    adminController.showUsersList(req, res);
 });
 
+// EDIT USER
+// GET: Show Edit User Form (e.g., /admin/users/edit/5)
+app.get("/admin/users/edit/:id", adminController.showEditUserForm);
+// POST: Handle User Update Submission
+app.post("/admin/users/edit/:id", adminController.updateUser);
+
+// DELETE USER
+// GET: Handle User Deletion (e.g., /admin/users/delete/5)
+app.get("/admin/users/delete/:id", adminController.deleteUser);
 
 // -------------------------------------------------------------------
 // ADMIN STORAGE MANAGEMENT ROUTES (Defined with app.get/app.post)
 // -------------------------------------------------------------------
 
-// Storage List
-app.get("/admin/storage", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showStorageList(req, res);
-});
-
 // ADD STORAGE
 // GET: Show Add Form
-app.get("/admin/storage/add", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showAddForm(req, res);
-});
+app.get("/admin/storage/add", adminController.showAddForm);
 // POST: Handle Add Submission
-app.post("/admin/storage/add", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.addStorage(req, res);
-});
+app.post("/admin/storage/add", adminController.addStorage);
 
 // EDIT STORAGE
 // GET: Show Edit Form (e.g., /admin/storage/edit/1)
-app.get("/admin/storage/edit/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showEditForm(req, res);
-});
+app.get("/admin/storage/edit/:id", adminController.showEditForm);
 // POST: Handle Edit Submission
-app.post("/admin/storage/edit/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.updateStorage(req, res);
-});
+app.post("/admin/storage/edit/:id", adminController.updateStorage);
 
 // DELETE STORAGE
 // GET: Handle Deletion (e.g., /admin/storage/delete/1)
-app.get("/admin/storage/delete/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.deleteStorage(req, res);
-});
+app.get("/admin/storage/delete/:id", adminController.deleteStorage);
+
+// Fallback GET /admin/storage (If the dashboard route is changed)
+app.get("/admin/storage", adminController.showStorageList);
 
 
-// -------------------------------------------------------------------
-// ADMIN USER MANAGEMENT ROUTES
-// -------------------------------------------------------------------
-
-// User List
-app.get("/admin/users", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showUserList(req, res);
-});
-
-// EDIT USER
-// GET: Show Edit Form
-app.get("/admin/users/edit/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showEditUserForm(req, res);
-});
-// POST: Handle Edit Submission
-app.post("/admin/users/edit/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.updateUser(req, res);
-});
-
-// DELETE USER
-app.get("/admin/users/delete/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.deleteUser(req, res);
-});
-
-
-// -------------------------------------------------------------------
-// ADMIN BOOKING MANAGEMENT ROUTES
-// -------------------------------------------------------------------
-
-// Booking List
-app.get("/admin/bookings", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showBookingList(req, res);
-});
-
-// EDIT BOOKING
-// GET: Show Edit Form
-app.get("/admin/bookings/edit/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.showEditBookingForm(req, res);
-});
-// POST: Handle Edit Submission
-app.post("/admin/bookings/edit/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.updateBooking(req, res);
-});
-
-// DELETE BOOKING
-app.get("/admin/bookings/delete/:id", (req, res) => {
-    if (!req.session.user) return res.redirect("/login");
-    if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
-    admin.deleteBooking(req, res);
-});
 
 
 // Start Server
