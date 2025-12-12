@@ -105,7 +105,26 @@ app.get("/admin/dashboard", (req, res) => {
     // Calls the controller function to fetch and display the storage list
     admin.showStorageList(req, res);
 });
+// ADMIN USER MANAGEMENT ROUTES
 
+// LIST USERS (The main view for user management)
+app.get("/admin/users", (req, res) => {
+    // Basic admin middleware check
+    if (!req.session.user || req.session.user.role !== "admin") {
+        return res.status(403).send("Not authorized");
+    }
+    adminController.showUsersList(req, res);
+});
+
+// EDIT USER
+// GET: Show Edit User Form (e.g., /admin/users/edit/5)
+app.get("/admin/users/edit/:id", adminController.showEditUserForm);
+// POST: Handle User Update Submission
+app.post("/admin/users/edit/:id", adminController.updateUser);
+
+// DELETE USER
+// GET: Handle User Deletion (e.g., /admin/users/delete/5)
+app.get("/admin/users/delete/:id", adminController.deleteUser);
 
 // -------------------------------------------------------------------
 // ADMIN STORAGE MANAGEMENT ROUTES (Defined with app.get/app.post)
@@ -129,6 +148,8 @@ app.get("/admin/storage/delete/:id", adminController.deleteStorage);
 
 // Fallback GET /admin/storage (If the dashboard route is changed)
 app.get("/admin/storage", adminController.showStorageList);
+
+
 
 
 // Start Server
