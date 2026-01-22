@@ -59,9 +59,9 @@ module.exports = {
     },
 
     // ===== USER MANAGEMENT =====
-    showUserList: (req, res) => {
+    showUserList: (req, res) => {   // ✅ Correct name
         User.getAll((err, users) => {
-            res.render("admin_users", { users });
+            res.render("admin_user_details", { users });
         });
     },
 

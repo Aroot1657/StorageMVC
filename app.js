@@ -102,53 +102,41 @@ app.get("/admin/dashboard", (req, res) => {
     if (!req.session.user) return res.redirect("/login");
     if (req.session.user.role !== "admin") return res.status(403).send("Not authorized");
 
-    // Calls the controller function to fetch and display the storage list
-    admin.showStorageList(req, res);
+    adminController.showStorageList(req, res); // storage list on dashboard
 });
+
 // ADMIN USER MANAGEMENT ROUTES
 
-// LIST USERS (The main view for user management)
+// LIST USERS
 app.get("/admin/users", (req, res) => {
-    // Basic admin middleware check
     if (!req.session.user || req.session.user.role !== "admin") {
         return res.status(403).send("Not authorized");
     }
-    adminController.showUsersList(req, res);
+    adminController.showUserList(req, res); // ✅ fixed name
 });
 
 // EDIT USER
-// GET: Show Edit User Form (e.g., /admin/users/edit/5)
 app.get("/admin/users/edit/:id", adminController.showEditUserForm);
-// POST: Handle User Update Submission
 app.post("/admin/users/edit/:id", adminController.updateUser);
 
 // DELETE USER
-// GET: Handle User Deletion (e.g., /admin/users/delete/5)
 app.get("/admin/users/delete/:id", adminController.deleteUser);
 
-// -------------------------------------------------------------------
-// ADMIN STORAGE MANAGEMENT ROUTES (Defined with app.get/app.post)
-// -------------------------------------------------------------------
+// ADMIN STORAGE MANAGEMENT ROUTES
 
 // ADD STORAGE
-// GET: Show Add Form
 app.get("/admin/storage/add", adminController.showAddForm);
-// POST: Handle Add Submission
 app.post("/admin/storage/add", adminController.addStorage);
 
 // EDIT STORAGE
-// GET: Show Edit Form (e.g., /admin/storage/edit/1)
 app.get("/admin/storage/edit/:id", adminController.showEditForm);
-// POST: Handle Edit Submission
 app.post("/admin/storage/edit/:id", adminController.updateStorage);
 
 // DELETE STORAGE
-// GET: Handle Deletion (e.g., /admin/storage/delete/1)
 app.get("/admin/storage/delete/:id", adminController.deleteStorage);
 
-// Fallback GET /admin/storage (If the dashboard route is changed)
+// LIST STORAGE (fallback route)
 app.get("/admin/storage", adminController.showStorageList);
-
 
 
 
