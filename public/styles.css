@@ -1,0 +1,31 @@
+/* ------------------------
+   COMMON BACKGROUND FOR ALL PAGES
+------------------------ */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  background: url('../images/storage-bg.jpg') no-repeat center center fixed; /* Replace with your image path */
+  background-size: cover; /* Cover full page */
+  background-attachment: fixed; /* Keeps background fixed on scroll */
+  background-position: center;
+  color: #1f2937;
+  position: relative;
+}
+
+/* Optional: semi-transparent overlay to improve readability of text */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* adjust darkness as needed */
+  z-index: 0;
+}
+
+/* Make page content appear above overlay */
+body > * {
+  position: relative;
+  z-index: 1;
+}
